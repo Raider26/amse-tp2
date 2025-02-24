@@ -19,6 +19,7 @@ class _Exo2State extends State<Exo2> {
   Timer? timer;
 
   void animate(Timer t) {
+    //à réparer
     setState(() {
       zValue >= 2 * pi ? zValue = 0 : zValue = zValue + 0.01;
       xValue >= 2 * pi ? xValue = 0 : xValue = xValue + 0.01;
