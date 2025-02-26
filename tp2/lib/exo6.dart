@@ -1,15 +1,42 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MaterialApp(home: TileGame()));
+void main() => runApp(MaterialApp(home: PositionedTiles()));
 
-class TileGame extends StatefulWidget {
-  @override
-  _TileGameState createState() => _TileGameState();
+class Tile {
+  final int number;
+  Tile(this.number);
 }
 
-class _TileGameState extends State<TileGame> {
-  final int gridSize = 4;
-  List<int> tiles = List.generate(15, (index) => index + 1) + [0];
+class TileWidget extends StatelessWidget {
+  final Tile tile;
+  final VoidCallback? onTap;
+
+  TileWidget(this.tile, {this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        color: tile.number == 0 ? Colors.white : Colors.grey,
+        child: Center(
+          child: tile.number != 0
+              ? Text("${tile.number}", style: TextStyle(fontSize: 24))
+              : SizedBox.shrink(),
+        ),
+      ),
+    );
+  }
+}
+
+class PositionedTiles extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => PositionedTilesState();
+}
+
+class PositionedTilesState extends State<PositionedTiles> {
+  int gridSize = 4;
+  List<Tile> tiles = List.generate(15, (index) => Tile(index + 1)) + [Tile(0)];
 
   @override
   void initState() {
@@ -17,19 +44,18 @@ class _TileGameState extends State<TileGame> {
     tiles.shuffle();
   }
 
-  void moveTile(int index) {
-    int emptyIndex = tiles.indexOf(0);
+  void swapTiles(int index) {
+    int emptyIndex = tiles.indexWhere((tile) => tile.number == 0);
     List<int> adjacentIndices = [
-      emptyIndex - 1, // Left
-      emptyIndex + 1, // Right
-      emptyIndex - gridSize, // Up
-      emptyIndex + gridSize // Down
+      emptyIndex - 1,
+      emptyIndex + 1,
+      emptyIndex - gridSize,
+      emptyIndex + gridSize
     ];
-
     if (adjacentIndices.contains(index)) {
       setState(() {
         tiles[emptyIndex] = tiles[index];
-        tiles[index] = 0;
+        tiles[index] = Tile(0);
       });
     }
   }
@@ -48,24 +74,7 @@ class _TileGameState extends State<TileGame> {
           padding: EdgeInsets.all(20),
           itemCount: gridSize * gridSize,
           itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () => moveTile(index),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: tiles[index] == 0 ? Colors.white : Colors.grey,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Center(
-                  child: tiles[index] != 0
-                      ? Text(
-                          tiles[index].toString(),
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        )
-                      : SizedBox.shrink(),
-                ),
-              ),
-            );
+            return TileWidget(tiles[index], onTap: () => swapTiles(index));
           },
         ),
       ),
