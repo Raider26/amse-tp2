@@ -84,8 +84,8 @@ class _Exo5State extends State<Exo5> {
                 child: Slider(
                     value: gridSize.toDouble(),
                     label: gridSize.toString(),
-                    min: 1,
-                    divisions: 10,
+                    min: 2,
+                    divisions: 9,
                     max: 10,
                     onChanged: (value) {
                       setState(() {
