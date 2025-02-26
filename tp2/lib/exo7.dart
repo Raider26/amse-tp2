@@ -22,7 +22,7 @@ class TileWidget extends StatelessWidget {
       child: Container(
         color: tile.number == 0 ? Colors.white : Colors.grey,
         child: tile.number == 0
-            ? Container(color: Colors.white)
+            ? Container(color: Colors.grey)
             : FittedBox(
                 fit: BoxFit.fill,
                 child: ClipRect(
@@ -50,31 +50,46 @@ class Exo7State extends State<Exo7> {
   int gridSize = 4;
   late double step;
   late List<Tile> tiles;
+  int countMovement = 0;
+  String image = "Aléatoire";
+  List<String> dropdownMenuItems = [
+    "Aléatoire",
+    "Image 1",
+    "Image 2",
+    "Image 3",
+    "Image 4",
+    "Image 5",
+    "Image 6",
+    "Image 7",
+    "Image 8",
+    "Image 9",
+    "Image 10"
+  ];
 
   @override
   void initState() {
     super.initState();
-    generateTiles();
+    generateTiles("Aléatoire");
   }
 
-  void generateTiles() {
+  void generateTiles(String image) {
     double step = 2 / (gridSize - 1);
     tiles = List.generate(
             gridSize * gridSize - 1,
             (index) => Tile(index + 1,
-                urlImage: 'https://picsum.photos/300',
+                urlImage: getImage(image),
                 alignment: Alignment(-1 + (index % gridSize) * step,
                     -1 + (index ~/ gridSize) * step),
                 factor: 1 / gridSize)) +
         [
           Tile(0,
-              urlImage: 'https://picsum.photos/300',
+              urlImage: getImage(image),
               alignment: Alignment(-1, -1),
               factor: 1 / gridSize)
         ];
   }
 
-  void swapTiles(int index) {
+  void swapTiles(int index, String image) {
     int emptyIndex = tiles.indexWhere((tile) => tile.number == 0);
     List<int> adjacentIndices = [
       emptyIndex - 1,
@@ -86,10 +101,21 @@ class Exo7State extends State<Exo7> {
       setState(() {
         tiles[emptyIndex] = tiles[index];
         tiles[index] = Tile(0,
-            urlImage: 'https://picsum.photos/300',
+            urlImage: getImage(image),
             alignment: Alignment(-1, -1),
             factor: 1 / gridSize);
       });
+    }
+  }
+
+  String getImage(String image) {
+    switch (image) {
+      case "Aléatoire":
+        return "https://picsum.photos/300";
+      case "Image 1":
+        return "assets/images/taquin1.jpg";
+      default:
+        return "https://picsum.photos/300";
     }
   }
 
@@ -126,6 +152,8 @@ class Exo7State extends State<Exo7> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text("Nombre de coups:"),
+            Text(countMovement.toString()),
             Expanded(
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -136,26 +164,40 @@ class Exo7State extends State<Exo7> {
                 padding: EdgeInsets.all(20),
                 itemCount: gridSize * gridSize,
                 itemBuilder: (context, index) {
-                  return TileWidget(tiles[index],
-                      onTap: () => swapTiles(index));
+                  return TileWidget(tiles[index], onTap: () {
+                    swapTiles(index, getImage(image));
+                    countMovement++;
+                  });
                 },
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      do {
-                        tiles.shuffle();
-                      } while (!isResolvable(
-                          tiles.indexWhere((tile) => tile.number == 0), tiles));
-                    });
-                  },
-                  child: Text('Shuffle'),
-                ),
-              ],
+            DropdownButton<String>(
+              value: image,
+              items: dropdownMenuItems.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  image = newValue!;
+                  generateTiles(image);
+                  countMovement = 0;
+                });
+              },
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  do {
+                    tiles.shuffle();
+                  } while (!isResolvable(
+                      tiles.indexWhere((tile) => tile.number == 0), tiles));
+                  countMovement = 0;
+                });
+              },
+              child: Text('Shuffle'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -165,24 +207,30 @@ class Exo7State extends State<Exo7> {
                     setState(() {
                       if (gridSize > 1) {
                         gridSize = gridSize - 1;
-                        generateTiles();
+                        generateTiles(image);
+                        countMovement = 0;
                       }
                     });
                   },
                   style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all(Colors.blue)),
-                  child: Text('-'),
+                  child: Text('-',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
                       gridSize = gridSize + 1;
-                      generateTiles();
+                      generateTiles(image);
+                      countMovement = 0;
                     });
                   },
                   style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all(Colors.blue)),
-                  child: Text('+'),
+                  child: Text('+',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
