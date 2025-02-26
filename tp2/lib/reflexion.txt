@@ -1,0 +1,21 @@
+
+//dans posCases mettre les cases 1 à 15 dans leur disposition; 0 à 3 pour la première ligne et ainsi de suite
+bool estresolvable(int indiceVide, List<int> posCases){
+    int nbreTranspositions=0;
+    bool res=false;
+    for (int i=0; i<posCases.length-1; i++){
+        if(posCases[i]!=i+1){
+            for (int j=i+1; j<posCases.length;j++){
+                if (posCases[j]==i+1){
+                    int temp= posCases[i];
+                    posCases[i]=posCases[j];
+                    posCases[j]=temp;
+                    nbreTranspositions+=1;
+                }
+            }
+        }
+        if (nbreTranspositions==indiceVide){
+            res=true;
+        }
+    }
+}
