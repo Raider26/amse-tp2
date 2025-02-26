@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MaterialApp(home: PositionedTiles()));
-
 class Tile {
   final int number;
-  Tile(this.number);
+  String urlImage;
+  Alignment alignment;
+  Tile(this.number, {required this.urlImage, required this.alignment});
 }
 
 class TileWidget extends StatelessWidget {
   final Tile tile;
   final VoidCallback? onTap;
 
-  TileWidget(this.tile, {this.onTap});
+  const TileWidget(this.tile, {super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -19,29 +19,51 @@ class TileWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         color: tile.number == 0 ? Colors.white : Colors.grey,
-        child: Center(
-          child: tile.number != 0
-              ? Text("${tile.number}", style: TextStyle(fontSize: 24))
-              : SizedBox.shrink(),
-        ),
+        child: tile.number == 0
+            ? Container(color: Colors.white)
+            : FittedBox(
+                fit: BoxFit.fill,
+                child: ClipRect(
+                  child: Align(
+                    alignment: tile.alignment,
+                    widthFactor: 0.25,
+                    heightFactor: 0.25,
+                    child: Image.network(tile.urlImage),
+                  ),
+                ),
+              ),
       ),
     );
   }
 }
 
-class PositionedTiles extends StatefulWidget {
+class Exo6 extends StatefulWidget {
+  const Exo6({super.key});
+
   @override
-  State<StatefulWidget> createState() => PositionedTilesState();
+  State<StatefulWidget> createState() => Exo6State();
 }
 
-class PositionedTilesState extends State<PositionedTiles> {
+class Exo6State extends State<Exo6> {
   int gridSize = 4;
-  List<Tile> tiles = List.generate(15, (index) => Tile(index + 1)) + [Tile(0)];
+  late double step;
+  late List<Tile> tiles;
 
   @override
   void initState() {
     super.initState();
-    tiles.shuffle();
+    step = 2 / (gridSize - 1);
+    tiles = List.generate(
+            15,
+            (index) => Tile(index + 1,
+                urlImage: 'https://picsum.photos/300',
+                alignment: Alignment(-1 + (index % gridSize) * step,
+                    -1 + (index ~/ gridSize) * step))) +
+        [
+          Tile(0,
+              urlImage: 'https://picsum.photos/300',
+              alignment: Alignment(-1, -1))
+        ];
   }
 
   void swapTiles(int index) {
@@ -55,7 +77,9 @@ class PositionedTilesState extends State<PositionedTiles> {
     if (adjacentIndices.contains(index)) {
       setState(() {
         tiles[emptyIndex] = tiles[index];
-        tiles[index] = Tile(0);
+        tiles[index] = Tile(0,
+            urlImage: 'https://picsum.photos/300',
+            alignment: Alignment(-1, -1));
       });
     }
   }

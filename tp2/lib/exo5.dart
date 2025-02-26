@@ -22,12 +22,6 @@ class Tile {
   }
 }
 
-Tile tile1 =
-    Tile(imageURL: 'https://picsum.photos/300', alignment: Alignment(-1, -1));
-
-Tile tile2 =
-    Tile(imageURL: 'https://picsum.photos/300', alignment: Alignment(0, -1));
-
 List<Widget> createTile(int gridSize) {
   List<Widget> grid = [];
   double step = 2 / (gridSize - 1);
