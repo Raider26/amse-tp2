@@ -87,7 +87,7 @@ class Exo6State extends State<Exo6> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sliding Puzzle')),
+      appBar: AppBar(title: Text('Exercice 6')),
       body: Center(
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
