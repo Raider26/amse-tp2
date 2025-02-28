@@ -116,6 +116,24 @@ class Exo7State extends State<Exo7> {
         return "https://picsum.photos/300";
       case "Image 1":
         return "assets/images/taquin1.jpg";
+      case "Image 2":
+        return "assets/images/taquin2.jpg";
+      case "Image 3":
+        return "assets/images/taquin3.jpg";
+      case "Image 4":
+        return "assets/images/taquin4.jpg";
+      case "Image 5":
+        return "assets/images/taquin5.jpg";
+      case "Image 6":
+        return "assets/images/taquin6.jpg";
+      case "Image 7":
+        return "assets/images/taquin7.jpg";
+      case "Image 8":
+        return "assets/images/taquin8.jpg";
+      case "Image 9":
+        return "assets/images/taquin9.jpg";
+      case "Image 10":
+        return "assets/images/taquin10.jpg";
       default:
         return "https://picsum.photos/300";
     }
@@ -193,8 +211,8 @@ class Exo7State extends State<Exo7> {
                       });
                     },
                     icon: showSmallImage
-                        ? Icon(Icons.disabled_visible_outlined)
-                        : Icon(Icons.remove_red_eye_outlined),
+                        ? Icon(Icons.disabled_visible_outlined, size: 20)
+                        : Icon(Icons.remove_red_eye_outlined, size: 20),
                   ),
                   showSmallImage
                       ? image == "Aléatoire"
@@ -213,6 +231,15 @@ class Exo7State extends State<Exo7> {
                       : SizedBox.shrink(),
                 ],
               ),
+              showSmallImage
+                  ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      SizedBox(width: 20),
+                      Text(
+                        "Modèle",
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ])
+                  : SizedBox.shrink(),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
