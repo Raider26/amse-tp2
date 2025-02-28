@@ -50,6 +50,7 @@ class Exo7State extends State<Exo7> {
   int gridSize = 4;
   late double step;
   late List<Tile> tiles;
+  bool showSmallImage = true;
   int countMovement = 0;
   String image = "Aléatoire";
   List<String> dropdownMenuItems = [
@@ -149,94 +150,128 @@ class Exo7State extends State<Exo7> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Exercice 7')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Nombre de coups:"),
-            Text(countMovement.toString()),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.6,
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: gridSize,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Nombre de coups:"),
+              Text(countMovement.toString()),
+              Container(
+                constraints: BoxConstraints(
+                  maxWidth: 350,
+                  maxHeight: 350,
                 ),
-                padding: EdgeInsets.all(20),
-                itemCount: gridSize * gridSize,
-                itemBuilder: (context, index) {
-                  return TileWidget(tiles[index], onTap: () {
-                    swapTiles(index, getImage(image));
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: gridSize,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  padding: EdgeInsets.all(20),
+                  itemCount: gridSize * gridSize,
+                  itemBuilder: (context, index) {
+                    return TileWidget(tiles[index], onTap: () {
+                      swapTiles(index, getImage(image));
+                    });
+                  },
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        showSmallImage = !showSmallImage;
+                      });
+                    },
+                    icon: showSmallImage
+                        ? Icon(Icons.disabled_visible_outlined)
+                        : Icon(Icons.remove_red_eye_outlined),
+                  ),
+                  showSmallImage
+                      ? image == "Aléatoire"
+                          ? Image.network(
+                              getImage(image),
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              getImage(image),
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            )
+                      : SizedBox.shrink(),
+                ],
+              ),
+              DropdownButton<String>(
+                value: image,
+                items: dropdownMenuItems.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    image = newValue!;
+                    generateTiles(image);
+                    countMovement = 0;
                   });
                 },
               ),
-            ),
-            DropdownButton<String>(
-              value: image,
-              items: dropdownMenuItems.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  image = newValue!;
-                  generateTiles(image);
-                  countMovement = 0;
-                });
-              },
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  do {
-                    tiles.shuffle();
-                  } while (!isResolvable(
-                      tiles.indexWhere((tile) => tile.number == 0), tiles));
-                  countMovement = 0;
-                });
-              },
-              child: Text('Shuffle'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      if (gridSize > 1) {
-                        gridSize = gridSize - 1;
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    do {
+                      tiles.shuffle();
+                    } while (!isResolvable(
+                        tiles.indexWhere((tile) => tile.number == 0), tiles));
+                    countMovement = 0;
+                  });
+                },
+                child: Text('Shuffle'),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        if (gridSize > 1) {
+                          gridSize = gridSize - 1;
+                          generateTiles(image);
+                          countMovement = 0;
+                        }
+                      });
+                    },
+                    style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(Colors.blue)),
+                    child: Text('-',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        gridSize = gridSize + 1;
                         generateTiles(image);
                         countMovement = 0;
-                      }
-                    });
-                  },
-                  style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(Colors.blue)),
-                  child: Text('-',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold)),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      gridSize = gridSize + 1;
-                      generateTiles(image);
-                      countMovement = 0;
-                    });
-                  },
-                  style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(Colors.blue)),
-                  child: Text('+',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold)),
-                ),
-              ],
-            ),
-          ],
+                      });
+                    },
+                    style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(Colors.blue)),
+                    child: Text('+',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
