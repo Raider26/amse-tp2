@@ -155,8 +155,14 @@ class Exo7State extends State<Exo7> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Nombre de coups:"),
-              Text(countMovement.toString()),
+              Text(
+                "Nombre de coups:",
+                style: TextStyle(fontSize: 20),
+              ),
+              Text(
+                countMovement.toString(),
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
               Container(
                 constraints: BoxConstraints(
                   maxWidth: 350,
@@ -165,8 +171,8 @@ class Exo7State extends State<Exo7> {
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: gridSize,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
                   ),
                   padding: EdgeInsets.all(20),
                   itemCount: gridSize * gridSize,
@@ -207,22 +213,33 @@ class Exo7State extends State<Exo7> {
                       : SizedBox.shrink(),
                 ],
               ),
-              DropdownButton<String>(
-                value: image,
-                items: dropdownMenuItems.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    image = newValue!;
-                    generateTiles(image);
-                    countMovement = 0;
-                  });
-                },
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Choississez une image: ",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  DropdownButton<String>(
+                    value: image,
+                    items: dropdownMenuItems.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        image = newValue!;
+                        generateTiles(image);
+                        countMovement = 0;
+                      });
+                    },
+                  ),
+                ],
               ),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   setState(() {
@@ -233,8 +250,12 @@ class Exo7State extends State<Exo7> {
                     countMovement = 0;
                   });
                 },
-                child: Text('Shuffle'),
+                child: Text(
+                  'Mélanger',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
+              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -248,8 +269,11 @@ class Exo7State extends State<Exo7> {
                         }
                       });
                     },
-                    style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(Colors.blue)),
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(20),
+                      backgroundColor: Colors.blue,
+                    ),
                     child: Text('-',
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold)),
@@ -262,8 +286,11 @@ class Exo7State extends State<Exo7> {
                         countMovement = 0;
                       });
                     },
-                    style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(Colors.blue)),
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(20),
+                      backgroundColor: Colors.blue,
+                    ),
                     child: Text('+',
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold)),
