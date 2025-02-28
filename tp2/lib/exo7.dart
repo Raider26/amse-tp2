@@ -104,6 +104,7 @@ class Exo7State extends State<Exo7> {
             urlImage: getImage(image),
             alignment: Alignment(-1, -1),
             factor: 1 / gridSize);
+        countMovement++;
       });
     }
   }
@@ -154,7 +155,9 @@ class Exo7State extends State<Exo7> {
           children: [
             Text("Nombre de coups:"),
             Text(countMovement.toString()),
-            Expanded(
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.6,
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: gridSize,
@@ -166,7 +169,6 @@ class Exo7State extends State<Exo7> {
                 itemBuilder: (context, index) {
                   return TileWidget(tiles[index], onTap: () {
                     swapTiles(index, getImage(image));
-                    countMovement++;
                   });
                 },
               ),
