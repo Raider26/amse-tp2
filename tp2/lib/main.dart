@@ -43,17 +43,32 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ListView.builder(
         itemCount: items.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(items[index]['title']),
-            leading: Icon(Icons.arrow_forward),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => items[index]['page'],
+          return Container(
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 20),
+              leading: Icon(Icons.arrow_forward_ios),
+              hoverColor: Colors.white38,
+              title: Center(
+                child: Text(
+                  items[index]['title'],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20),
                 ),
-              );
-            },
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              tileColor: index.isEven ? Colors.lightBlue : Colors.lightGreen,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => items[index]['page'],
+                  ),
+                );
+              },
+            ),
           );
         },
       ),

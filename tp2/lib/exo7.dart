@@ -236,7 +236,10 @@ class Exo7State extends State<Exo7> {
                       SizedBox(width: 20),
                       Text(
                         "Modèle",
-                        style: TextStyle(fontSize: 15),
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline),
                       ),
                     ])
                   : SizedBox.shrink(),
