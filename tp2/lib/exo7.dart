@@ -211,8 +211,8 @@ class Exo7State extends State<Exo7> {
                       });
                     },
                     icon: showSmallImage
-                        ? Icon(Icons.disabled_visible_outlined, size: 20)
-                        : Icon(Icons.remove_red_eye_outlined, size: 20),
+                        ? Icon(Icons.remove_red_eye_outlined, size: 20)
+                        : Icon(Icons.remove_red_eye, size: 20),
                   ),
                   showSmallImage
                       ? image == "Aléatoire"
@@ -248,7 +248,7 @@ class Exo7State extends State<Exo7> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Choississez une image: ",
+                    "Choisissez une image: ",
                     style: TextStyle(fontSize: 18),
                   ),
                   DropdownButton<String>(
@@ -292,7 +292,7 @@ class Exo7State extends State<Exo7> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        if (gridSize > 1) {
+                        if (gridSize > 2) {
                           gridSize = gridSize - 1;
                           generateTiles(image);
                           countMovement = 0;
@@ -311,7 +311,9 @@ class Exo7State extends State<Exo7> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        gridSize = gridSize + 1;
+                        gridSize < 8
+                            ? gridSize = gridSize + 1
+                            : gridSize = gridSize;
                         generateTiles(image);
                         countMovement = 0;
                       });
