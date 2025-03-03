@@ -1,4 +1,6 @@
+import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 class Tile {
   final int number;
@@ -57,6 +59,7 @@ class Exo7State extends State<Exo7> {
   late List<Tile> tiles;
   bool showSmallImage = true;
   int countMovement = 0;
+  int countMovementMin = 0;
   bool isWon = false;
   String image = "Aléatoire";
   List<String> dropdownMenuItems = [
@@ -213,6 +216,77 @@ class Exo7State extends State<Exo7> {
     }
   }
 
+  int aStarSolver() {
+    List<int> state = tiles.map((tile) => tile.number).toList();
+    int emptyIndex = state.indexOf(0);
+
+    PriorityQueue<List<dynamic>> queue = PriorityQueue(
+        (a, b) => (a[1] + heuristic(a[0])).compareTo(b[1] + heuristic(b[0])));
+
+    queue.add([state, 0]); // [État actuel, Nombre de coups]
+
+    Set<String> visited = {};
+
+    while (queue.isNotEmpty) {
+      var current = queue.removeFirst();
+      List<int> currentState = current[0];
+      int moves = current[1];
+
+      if (isGoalState(currentState)) {
+        return moves; // Retourne le nombre minimum de coups
+      }
+
+      String key = currentState.join(',');
+      if (visited.contains(key)) continue;
+      visited.add(key);
+
+      for (var next in generateNextStates(currentState)) {
+        if (!visited.contains(next.join(','))) {
+          queue.add([next, moves + 1]);
+        }
+      }
+    }
+    return -1; // État impossible (ne devrait pas arriver)
+  }
+
+  bool isGoalState(List<int> state) {
+    return List.generate(gridSize * gridSize, (i) => i).toList().toString() ==
+        state.toString();
+  }
+
+  int heuristic(List<int> state) {
+    int h = 0;
+    for (int i = 0; i < state.length; i++) {
+      if (state[i] != 0) {
+        int correctPosition = state[i] - 1;
+        h += (correctPosition % gridSize - i % gridSize).abs() +
+            (correctPosition ~/ gridSize - i ~/ gridSize).abs();
+      }
+    }
+    return h;
+  }
+
+  List<List<int>> generateNextStates(List<int> state) {
+    List<List<int>> nextStates = [];
+    int emptyIndex = state.indexOf(0);
+    List<int> moves = [-1, 1, -gridSize, gridSize];
+
+    for (var move in moves) {
+      int newIndex = emptyIndex + move;
+      if (newIndex >= 0 &&
+          newIndex < state.length &&
+          (move.abs() == 1 &&
+                  (newIndex ~/ gridSize == emptyIndex ~/ gridSize) ||
+              move.abs() == gridSize)) {
+        List<int> newState = List.from(state);
+        newState[emptyIndex] = newState[newIndex];
+        newState[newIndex] = 0;
+        nextStates.add(newState);
+      }
+    }
+    return nextStates;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -222,13 +296,44 @@ class Exo7State extends State<Exo7> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Nombre de coups:",
-                style: TextStyle(fontSize: 20),
-              ),
-              Text(
-                countMovement.toString(),
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              Container(
+                alignment: Alignment.centerLeft,
+                width: MediaQuery.of(context).size.width * 0.99,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Nombre de coups:",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        Text(
+                          countMovement.toString(),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    gridSize == 3 ? SizedBox(width: 50) : SizedBox.shrink(),
+                    gridSize == 3
+                        ? Column(
+                            children: [
+                              Text(
+                                "Nombre de coups minimum:",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              Text(
+                                countMovementMin.toString(),
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          )
+                        : SizedBox.shrink(),
+                  ],
+                ),
               ),
               Container(
                 constraints: BoxConstraints(
@@ -330,6 +435,10 @@ class Exo7State extends State<Exo7> {
                     } while (!isResolvable(
                         tiles.indexWhere((tile) => tile.number == 0), tiles));
                     countMovement = 0;
+                    if (gridSize == 3) {
+                      countMovementMin =
+                          aStarSolver(); // Calculer le nombre minimum de coups
+                    }
                   });
                 },
                 child: Text(
