@@ -131,11 +131,19 @@ class Exo7State extends State<Exo7> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Félicitations!"),
+            title: Center(
+                child: Text(
+              "Félicitations!",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )),
             content: Text("Vous avez gagné en $countMovement mouvements."),
             actions: [
-              TextButton(
-                child: Text("OK"),
+              Center(
+                  child: TextButton(
+                child: Text(
+                  "Rejouer",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 onPressed: () {
                   setState(() {
                     countMovement = 0;
@@ -143,7 +151,7 @@ class Exo7State extends State<Exo7> {
                     Navigator.of(context).pop();
                   });
                 },
-              ),
+              )),
             ],
           );
         },
@@ -312,6 +320,9 @@ class Exo7State extends State<Exo7> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(200, 50),
+                ),
                 onPressed: () {
                   setState(() {
                     do {
@@ -323,52 +334,71 @@ class Exo7State extends State<Exo7> {
                 },
                 child: Text(
                   'Mélanger',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        if (gridSize > 2) {
-                          gridSize = gridSize - 1;
-                          generateTiles(image);
-                          countMovement = 0;
-                        }
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(20),
-                      backgroundColor: Colors.blue,
+              Container(
+                width: 350,
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: Colors.blue, width: 2),
+                ),
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Text(
+                      "Augmenter/réduire la taille du taquin",
+                      style: TextStyle(fontSize: 18),
                     ),
-                    child: Text('-',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        gridSize < 8
-                            ? gridSize = gridSize + 1
-                            : gridSize = gridSize;
-                        generateTiles(image);
-                        countMovement = 0;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(20),
-                      backgroundColor: Colors.blue,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              if (gridSize > 2) {
+                                gridSize = gridSize - 1;
+                                generateTiles(image);
+                                countMovement = 0;
+                              }
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(20),
+                            backgroundColor: Colors.blue,
+                          ),
+                          child: Text('-',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              gridSize < 8
+                                  ? gridSize = gridSize + 1
+                                  : gridSize = gridSize;
+                              generateTiles(image);
+                              countMovement = 0;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(20),
+                            backgroundColor: Colors.blue,
+                          ),
+                          child: Text('+',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ],
                     ),
-                    child: Text('+',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
