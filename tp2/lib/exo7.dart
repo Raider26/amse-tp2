@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
@@ -61,6 +62,8 @@ class Exo7State extends State<Exo7> {
   int countMovement = 0;
   int countMovementMin = 0;
   bool isWon = false;
+
+  int deplacements = Random().nextInt(100);
   String image = "Aléatoire";
   List<String> dropdownMenuItems = [
     "Aléatoire",
@@ -446,6 +449,23 @@ class Exo7State extends State<Exo7> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(200, 50),
+                ),
+                onPressed: () {
+                  setState(() {
+                    for (int i = 0; i < deplacements; i++) {
+                      tiles.shuffle();
+                    }
+                  });
+                },
+                child: Text(
+                  'Mélanger en x coups',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ),
+              Text("nbre mélange effectués: $deplacements"),
               SizedBox(height: 20),
               Container(
                 width: 350,
