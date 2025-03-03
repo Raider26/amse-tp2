@@ -30,7 +30,12 @@ class TileWidget extends StatelessWidget {
                     alignment: tile.alignment,
                     widthFactor: tile.factor,
                     heightFactor: tile.factor,
-                    child: Image.network(tile.urlImage),
+                    child: Image.network(
+                      tile.urlImage,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network("https://picsum.photos/300");
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -52,6 +57,7 @@ class Exo7State extends State<Exo7> {
   late List<Tile> tiles;
   bool showSmallImage = true;
   int countMovement = 0;
+  bool isWon = false;
   String image = "Aléatoire";
   List<String> dropdownMenuItems = [
     "Aléatoire",
@@ -107,6 +113,41 @@ class Exo7State extends State<Exo7> {
             factor: 1 / gridSize);
         countMovement++;
       });
+      checkIfWon();
+    }
+  }
+
+  void checkIfWon() {
+    for (int i = 0; i < tiles.length - 1; i++) {
+      if (tiles[i].number != i + 1) {
+        return;
+      }
+    }
+    setState(() {
+      isWon = true;
+    });
+    if (isWon) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Félicitations!"),
+            content: Text("Vous avez gagné en $countMovement mouvements."),
+            actions: [
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  setState(() {
+                    countMovement = 0;
+                    isWon = false;
+                    Navigator.of(context).pop();
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
