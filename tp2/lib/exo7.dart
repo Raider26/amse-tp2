@@ -394,6 +394,77 @@ class Exo7State extends State<Exo7> {
                   ],
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment
+                    .spaceBetween, // Sépare les éléments aux extrémités
+                children: [
+                  SizedBox(width: 5), // Espacement entre les éléments
+                  // Bouton Back à gauche
+                  ElevatedButton(
+                    onPressed: () {
+                      back();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(20),
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: Icon(Icons.arrow_back, color: Colors.white),
+                  ),
+
+                  // Espacement entre les éléments
+                  Row(
+                    children: [
+                      // Bouton "-"
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            if (gridSize > 2) {
+                              gridSize = gridSize - 1;
+                              generateTiles(image);
+                              countMovement = 0;
+                            }
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          padding: EdgeInsets.all(20),
+                          backgroundColor: Colors.blue,
+                        ),
+                        child: Text('-',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                      ),
+
+                      SizedBox(width: 10), // Espacement entre les boutons
+
+                      // Bouton "+"
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            if (gridSize < 8) {
+                              gridSize = gridSize + 1;
+                              generateTiles(image);
+                              countMovement = 0;
+                            }
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          padding: EdgeInsets.all(20),
+                          backgroundColor: Colors.blue,
+                        ),
+                        child: Text('+',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                  SizedBox(width: 5), // Espacement entre les éléments
+                ],
+              ),
               Container(
                 constraints: BoxConstraints(
                   maxWidth: 350,
@@ -602,75 +673,6 @@ class Exo7State extends State<Exo7> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                 ),
-              SizedBox(height: 20),
-              Container(
-                width: 350,
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.blue, width: 2),
-                ),
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Text(
-                      "Augmenter/réduire la taille du taquin",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              if (gridSize > 2) {
-                                gridSize = gridSize - 1;
-                                generateTiles(image);
-                                countMovement = 0;
-                              }
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shape: CircleBorder(),
-                            padding: EdgeInsets.all(20),
-                            backgroundColor: Colors.blue,
-                          ),
-                          child: Text('-',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              gridSize < 8
-                                  ? gridSize = gridSize + 1
-                                  : gridSize = gridSize;
-                              generateTiles(image);
-                              countMovement = 0;
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shape: CircleBorder(),
-                            padding: EdgeInsets.all(20),
-                            backgroundColor: Colors.blue,
-                          ),
-                          child: Text('+',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              BackButton(
-                onPressed: () {
-                  back();
-                },
-              ),
             ],
           ),
         ),
