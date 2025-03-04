@@ -63,7 +63,7 @@ class Exo7State extends State<Exo7> {
   int countMovementMin = 0;
   bool isWon = false;
 
-  int deplacements = Random().nextInt(100);
+  int deplacements = 0;
   String image = "Aléatoire";
   List<String> dropdownMenuItems = [
     "Aléatoire",
@@ -79,10 +79,13 @@ class Exo7State extends State<Exo7> {
     "Image 10"
   ];
 
+  TextEditingController deplacementsController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     generateTiles("Aléatoire");
+    deplacementsController.text = deplacements.toString();
   }
 
   void generateTiles(String image) {
@@ -120,6 +123,40 @@ class Exo7State extends State<Exo7> {
         countMovement++;
       });
       checkIfWon();
+    }
+  }
+
+  void melangeXCoups(int deplacements) {
+    int emptyIndex = tiles.indexWhere((tile) => tile.number == 0);
+
+    for (int i = 0; i < deplacements; i++) {
+      List<int> adjacentIndices = [
+        emptyIndex - 1,
+        emptyIndex + 1,
+        emptyIndex - gridSize,
+        emptyIndex + gridSize
+      ];
+
+      // Filtrer les indices adjacents valides
+      adjacentIndices = adjacentIndices.where((index) {
+        return index >= 0 &&
+            index < tiles.length &&
+            (index ~/ gridSize == emptyIndex ~/ gridSize ||
+                index % gridSize == emptyIndex % gridSize);
+      }).toList();
+
+      int caseAleatoire =
+          adjacentIndices[Random().nextInt(adjacentIndices.length)];
+
+      setState(() {
+        tiles[emptyIndex] = tiles[caseAleatoire];
+        tiles[caseAleatoire] = Tile(0,
+            urlImage: getImage(image),
+            alignment: Alignment(-1, -1),
+            factor: 1 / gridSize);
+        emptyIndex = caseAleatoire;
+        countMovement++;
+      });
     }
   }
 
@@ -449,15 +486,28 @@ class Exo7State extends State<Exo7> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
+              SizedBox(height: 20),
+              TextField(
+                controller: deplacementsController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: "Nombre de déplacements",
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    deplacements = int.tryParse(value) ?? deplacements;
+                  });
+                },
+              ),
+              SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(200, 50),
                 ),
                 onPressed: () {
                   setState(() {
-                    for (int i = 0; i < deplacements; i++) {
-                      tiles.shuffle();
-                    }
+                    melangeXCoups(deplacements);
                   });
                 },
                 child: Text(
@@ -465,7 +515,7 @@ class Exo7State extends State<Exo7> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
-              Text("nbre mélange effectués: $deplacements"),
+              Text("Nombre de mélanges effectués: $deplacements"),
               SizedBox(height: 20),
               Container(
                 width: 350,
