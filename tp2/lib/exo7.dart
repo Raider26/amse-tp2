@@ -62,6 +62,7 @@ class Exo7State extends State<Exo7> {
   int countMovement = 0;
   int countMovementMin = 0;
   bool isWon = false;
+  int posZeroBack = -1;
 
   int deplacements = 0;
   String image = "Aléatoire";
@@ -116,6 +117,7 @@ class Exo7State extends State<Exo7> {
     ];
     if (adjacentIndices.contains(index) && index >= 0 && index < tiles.length) {
       setState(() {
+        posZeroBack = emptyIndex;
         tiles[emptyIndex] = tiles[index];
         tiles[index] = Tile(0,
             urlImage: getImage(image),
@@ -123,7 +125,23 @@ class Exo7State extends State<Exo7> {
             factor: 1 / gridSize);
         countMovement++;
       });
+
       checkIfWon();
+    }
+  }
+
+  void back() {
+    if ((posZeroBack != -1) &&
+        (posZeroBack != tiles.indexWhere((tile) => tile.number == 0))) {
+      setState(() {
+        tiles[posZeroBack] =
+            tiles[tiles.indexWhere((tile) => tile.number == 0)];
+        tiles[tiles.indexWhere((tile) => tile.number == 0)] = Tile(posZeroBack,
+            urlImage: getImage(image),
+            alignment: Alignment(-1, -1),
+            factor: 1 / gridSize);
+        countMovement--;
+      });
     }
   }
 
@@ -158,6 +176,7 @@ class Exo7State extends State<Exo7> {
         emptyIndex = caseAleatoire;
       });
     }
+    posZeroBack = emptyIndex;
   }
 
   void checkIfWon() {
@@ -565,6 +584,8 @@ class Exo7State extends State<Exo7> {
                       } else {
                         do {
                           tiles.shuffle();
+                          posZeroBack =
+                              tiles.indexWhere((tile) => tile.number == 0);
                         } while (!isResolvable(
                             tiles.indexWhere((tile) => tile.number == 0),
                             tiles));
@@ -643,6 +664,12 @@ class Exo7State extends State<Exo7> {
                     ),
                   ],
                 ),
+              ),
+              SizedBox(height: 20),
+              BackButton(
+                onPressed: () {
+                  back();
+                },
               ),
             ],
           ),
