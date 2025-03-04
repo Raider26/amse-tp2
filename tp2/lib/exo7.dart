@@ -65,6 +65,7 @@ class Exo7State extends State<Exo7> {
 
   int deplacements = 0;
   String image = "Aléatoire";
+  bool useMelangeXCoups = false; // Variable pour suivre l'état du switch
   List<String> dropdownMenuItems = [
     "Aléatoire",
     "Image 1",
@@ -155,7 +156,6 @@ class Exo7State extends State<Exo7> {
             alignment: Alignment(-1, -1),
             factor: 1 / gridSize);
         emptyIndex = caseAleatoire;
-        countMovement++;
       });
     }
   }
@@ -464,58 +464,123 @@ class Exo7State extends State<Exo7> {
                 ],
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(200, 50),
-                ),
-                onPressed: () {
-                  setState(() {
-                    do {
-                      tiles.shuffle();
-                    } while (!isResolvable(
-                        tiles.indexWhere((tile) => tile.number == 0), tiles));
-                    countMovement = 0;
-                    if (gridSize == 3) {
-                      countMovementMin =
-                          aStarSolver(); // Calculer le nombre minimum de coups
-                    }
-                  });
-                },
-                child: Text(
-                  'Mélanger',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 150,
+                    child: Column(
+                      children: [
+                        Text(
+                          "Mode aléatoire",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Switch(
+                    value: useMelangeXCoups,
+                    onChanged: (value) {
+                      setState(() {
+                        useMelangeXCoups = value;
+                      });
+                    },
+                  ),
+                  Container(
+                    width: 150,
+                    child: Column(
+                      children: [
+                        Text(
+                          "Choisir le nombre de mélanges",
+                          style: TextStyle(fontSize: 15),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 20),
-              TextField(
-                controller: deplacementsController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: "Nombre de déplacements",
-                  border: OutlineInputBorder(),
+              if (useMelangeXCoups)
+                Row(
+                  children: [
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: TextField(
+                        controller: deplacementsController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: "Entrer un nombre",
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            deplacements = int.tryParse(value) ?? deplacements;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(200, 50),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          if (useMelangeXCoups) {
+                            melangeXCoups(deplacements);
+                          } else {
+                            do {
+                              tiles.shuffle();
+                            } while (!isResolvable(
+                                tiles.indexWhere((tile) => tile.number == 0),
+                                tiles));
+                            countMovement = 0;
+                            if (gridSize == 3) {
+                              countMovementMin =
+                                  aStarSolver(); // Calculer le nombre minimum de coups
+                            }
+                          }
+                        });
+                      },
+                      child: Text(
+                        'Mélanger',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                  ],
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    deplacements = int.tryParse(value) ?? deplacements;
-                  });
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(200, 50),
+              if (!useMelangeXCoups)
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(200, 50),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      if (useMelangeXCoups) {
+                        melangeXCoups(deplacements);
+                      } else {
+                        do {
+                          tiles.shuffle();
+                        } while (!isResolvable(
+                            tiles.indexWhere((tile) => tile.number == 0),
+                            tiles));
+                        countMovement = 0;
+                        if (gridSize == 3) {
+                          countMovementMin =
+                              aStarSolver(); // Calculer le nombre minimum de coups
+                        }
+                      }
+                    });
+                  },
+                  child: Text(
+                    'Mélanger',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
                 ),
-                onPressed: () {
-                  setState(() {
-                    melangeXCoups(deplacements);
-                  });
-                },
-                child: Text(
-                  'Mélanger en x coups',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-              ),
-              Text("Nombre de mélanges effectués: $deplacements"),
               SizedBox(height: 20),
               Container(
                 width: 350,
