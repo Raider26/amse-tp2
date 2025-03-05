@@ -120,7 +120,7 @@ class Exo7State extends State<Exo7> {
   }
 
   void generateTiles(String image) {
-    double step = 2 / (gridSize - 1);
+    step = 2 / (gridSize - 1);
     tiles = List.generate(
             gridSize * gridSize - 1,
             (index) => Tile(index + 1,
@@ -150,7 +150,8 @@ class Exo7State extends State<Exo7> {
         tiles[emptyIndex] = tiles[index];
         tiles[index] = Tile(0,
             urlImage: getImage(image),
-            alignment: Alignment(-1, -1),
+            alignment: Alignment(-1 + (index % gridSize) * step,
+                -1 + (index ~/ gridSize) * step),
             factor: 1 / gridSize);
         countMovement++;
       });
@@ -163,13 +164,12 @@ class Exo7State extends State<Exo7> {
     if ((posZeroBack != -1) &&
         (posZeroBack != tiles.indexWhere((tile) => tile.number == 0))) {
       setState(() {
-        tiles[posZeroBack] =
-            tiles[tiles.indexWhere((tile) => tile.number == 0)];
-        tiles[tiles.indexWhere((tile) => tile.number == 0)] = Tile(posZeroBack,
-            urlImage: getImage(image),
-            alignment: Alignment(-1, -1),
-            factor: 1 / gridSize);
+        int emptyIndex = tiles.indexWhere((tile) => tile.number == 0);
+        Tile temp = tiles[posZeroBack];
+        tiles[posZeroBack] = tiles[emptyIndex];
+        tiles[emptyIndex] = temp;
         countMovement--;
+        posZeroBack = -1;
       });
     }
   }
