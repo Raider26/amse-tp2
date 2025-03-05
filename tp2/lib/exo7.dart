@@ -671,8 +671,8 @@ class Exo7State extends State<Exo7> {
                     SizedBox(width: 20),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        minimumSize: Size(200, 50),
-                      ),
+                          minimumSize: Size(200, 50),
+                          backgroundColor: Colors.blue),
                       onPressed: () {
                         setState(() {
                           if (useMelangeXCoups) {
@@ -692,10 +692,22 @@ class Exo7State extends State<Exo7> {
                           }
                         });
                       },
-                      child: Text(
-                        'Mélanger',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Mélanger',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.white),
+                          ),
+                          SizedBox(width: 10),
+                          Icon(
+                            Icons.shuffle,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(width: 20),
@@ -705,6 +717,8 @@ class Exo7State extends State<Exo7> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(200, 50),
+                    maximumSize: Size(250, 50),
+                    backgroundColor: Colors.blue,
                   ),
                   onPressed: () {
                     setState(() {
@@ -726,9 +740,23 @@ class Exo7State extends State<Exo7> {
                       }
                     });
                   },
-                  child: Text(
-                    'Mélanger',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Mélanger',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.white),
+                      ),
+                      SizedBox(width: 10),
+                      Icon(
+                        Icons.shuffle,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ],
                   ),
                 ),
             ],
