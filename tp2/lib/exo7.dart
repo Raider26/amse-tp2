@@ -584,8 +584,10 @@ class Exo7State extends State<Exo7> {
                           )
                         ],
                       ),
-                      gridSize == 3 ? SizedBox(width: 30) : SizedBox.shrink(),
-                      gridSize == 3
+                      (gridSize == 3 && useResolver)
+                          ? SizedBox(width: 30)
+                          : SizedBox.shrink(),
+                      (gridSize == 3 && useResolver)
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -818,20 +820,7 @@ class Exo7State extends State<Exo7> {
                           backgroundColor: Colors.blue),
                       onPressed: () {
                         setState(() {
-                          if (useMelangeXCoups) {
-                            melangeXCoups(deplacements);
-                          } else {
-                            do {
-                              tiles.shuffle();
-                            } while (!isResolvable(
-                                tiles.indexWhere((tile) => tile.number == 0),
-                                tiles));
-
-                            countMovement = 0;
-                            if ((gridSize == 3) && (useResolver)) {
-                              countMovementMin = aStarSolver();
-                            }
-                          }
+                          melangeXCoups(deplacements);
                         });
                       },
                       child: Row(
@@ -864,20 +853,15 @@ class Exo7State extends State<Exo7> {
                   ),
                   onPressed: () {
                     setState(() {
-                      if (useMelangeXCoups) {
-                        melangeXCoups(deplacements);
-                      } else {
-                        do {
-                          tiles.shuffle();
-                          posZeroBack =
-                              tiles.indexWhere((tile) => tile.number == 0);
-                        } while (!isResolvable(
-                            tiles.indexWhere((tile) => tile.number == 0),
-                            tiles));
-                        countMovement = 0;
-                        if (gridSize == 3) {
-                          countMovementMin = aStarSolver();
-                        }
+                      do {
+                        tiles.shuffle();
+                        posZeroBack =
+                            tiles.indexWhere((tile) => tile.number == 0);
+                      } while (!isResolvable(
+                          tiles.indexWhere((tile) => tile.number == 0), tiles));
+                      countMovement = 0;
+                      if ((gridSize == 3) && (useResolver)) {
+                        countMovementMin = aStarSolver();
                       }
                     });
                   },
