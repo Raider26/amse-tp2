@@ -1,0 +1,2 @@
+C:/Users/maxen/OneDrive/taquin/amse-tp2/tp2/android/app/.cxx/Debug/0c144p5i/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/maxen/OneDrive/taquin/amse-tp2/tp2/android/app/.cxx/Debug/0c144p5i/armeabi-v7a/CMakeFiles/rebuild_cache.dir

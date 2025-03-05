@@ -71,7 +71,6 @@ class TileWidget extends StatelessWidget {
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              backgroundColor: Colors.black54,
                             ),
                           ),
                         ),
@@ -511,7 +510,20 @@ class Exo7State extends State<Exo7> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Exercice 7')),
+      appBar: AppBar(
+        title: Text('Exercice 7'),
+        backgroundColor: const Color.fromARGB(255, 222, 227, 248),
+        actions: [
+          ElevatedButton(
+              onPressed: settings,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+              ),
+              child: Icon(Icons.settings, color: Colors.white)),
+          SizedBox(width: 20),
+        ],
+      ),
+      backgroundColor: const Color.fromARGB(255, 222, 227, 248),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -530,8 +542,8 @@ class Exo7State extends State<Exo7> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Nombre de coups:",
-                            style: TextStyle(fontSize: 15),
+                            "Coups:",
+                            style: TextStyle(fontSize: 20),
                           ),
                           Text(
                             countMovement.toString(),
@@ -540,26 +552,25 @@ class Exo7State extends State<Exo7> {
                           )
                         ],
                       ),
-                      gridSize == 3 ? SizedBox(width: 20) : SizedBox.shrink(),
+                      gridSize == 3 ? SizedBox(width: 30) : SizedBox.shrink(),
                       gridSize == 3
-                          ? Flexible(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Nombre de coups minimum nécessaires:",
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                  Text(
-                                    countMovementMin.toString(),
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Coups minimum:",
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                Text(
+                                  countMovementMin.toString(),
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
                             )
                           : SizedBox.shrink(),
                     ],
@@ -576,17 +587,19 @@ class Exo7State extends State<Exo7> {
                     },
                     style: ElevatedButton.styleFrom(
                       shape: CircleBorder(),
+                      iconSize: 15,
                       padding: EdgeInsets.all(20),
                       backgroundColor: Colors.blue,
                     ),
                     child: Icon(Icons.arrow_back, color: Colors.white),
                   ),
                   Container(
-                    padding: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(3),
                     decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue, width: 2),
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blueGrey),
+                      border: Border.all(color: Colors.blue, width: 2),
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color.fromARGB(255, 222, 227, 248),
+                    ),
                     child: Row(
                       children: [
                         ElevatedButton(
@@ -601,6 +614,7 @@ class Exo7State extends State<Exo7> {
                           },
                           style: ElevatedButton.styleFrom(
                             shape: CircleBorder(),
+                            iconSize: 15,
                             padding: EdgeInsets.all(20),
                             backgroundColor: Colors.blue,
                           ),
@@ -609,7 +623,7 @@ class Exo7State extends State<Exo7> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold)),
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: 5),
                         ElevatedButton(
                           onPressed: () {
                             setState(() {
@@ -622,6 +636,7 @@ class Exo7State extends State<Exo7> {
                           },
                           style: ElevatedButton.styleFrom(
                             shape: CircleBorder(),
+                            iconSize: 15,
                             padding: EdgeInsets.all(20),
                             backgroundColor: Colors.blue,
                           ),
@@ -641,23 +656,25 @@ class Exo7State extends State<Exo7> {
                   maxWidth: 350,
                   maxHeight: 350,
                 ),
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: gridSize,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 5,
+                child: Expanded(
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: gridSize,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5,
+                    ),
+                    padding: EdgeInsets.all(20),
+                    itemCount: gridSize * gridSize,
+                    itemBuilder: (context, index) {
+                      return TileWidget(
+                        tiles[index],
+                        onTap: () {
+                          swapTiles(index, getImage(image));
+                        },
+                        showTileNumbers: showTileNumbers,
+                      );
+                    },
                   ),
-                  padding: EdgeInsets.all(20),
-                  itemCount: gridSize * gridSize,
-                  itemBuilder: (context, index) {
-                    return TileWidget(
-                      tiles[index],
-                      onTap: () {
-                        swapTiles(index, getImage(image));
-                      },
-                      showTileNumbers: showTileNumbers,
-                    );
-                  },
                 ),
               ),
               Row(
@@ -702,7 +719,6 @@ class Exo7State extends State<Exo7> {
                       ),
                     ])
                   : SizedBox.shrink(),
-              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -728,16 +744,7 @@ class Exo7State extends State<Exo7> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                  onPressed: settings,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                  ),
-                  child: Icon(Icons.settings, color: Colors.white)),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 10),
               if (useMelangeXCoups)
                 Row(
                   children: [
@@ -846,6 +853,7 @@ class Exo7State extends State<Exo7> {
                     ],
                   ),
                 ),
+              SizedBox(height: 20),
             ],
           ),
         ),
