@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
@@ -15,8 +14,10 @@ class Tile {
 class TileWidget extends StatelessWidget {
   final Tile tile;
   final VoidCallback? onTap;
+  final bool showTileNumbers;
 
-  const TileWidget(this.tile, {super.key, this.onTap});
+  const TileWidget(this.tile,
+      {super.key, this.onTap, required this.showTileNumbers});
 
   @override
   Widget build(BuildContext context) {
@@ -26,21 +27,46 @@ class TileWidget extends StatelessWidget {
         color: tile.number == 0 ? Colors.white : Colors.grey,
         child: tile.number == 0
             ? Container(color: Colors.grey)
-            : FittedBox(
-                fit: BoxFit.fill,
-                child: ClipRect(
-                  child: Align(
-                    alignment: tile.alignment,
-                    widthFactor: tile.factor,
-                    heightFactor: tile.factor,
-                    child: Image.network(
-                      tile.urlImage,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.network("https://picsum.photos/300");
-                      },
+            : Stack(
+                children: [
+                  FittedBox(
+                    fit: BoxFit.fill,
+                    child: ClipRect(
+                      child: Align(
+                        alignment: tile.alignment,
+                        widthFactor: tile.factor,
+                        heightFactor: tile.factor,
+                        child: tile.urlImage.startsWith('assets/')
+                            ? Image.asset(
+                                tile.urlImage,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                tile.urlImage,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.network(
+                                      "https://picsum.photos/300");
+                                },
+                              ),
+                      ),
                     ),
                   ),
-                ),
+                  if (showTileNumbers)
+                    Positioned(
+                      top: 5,
+                      left: 5,
+                      child: Text(
+                        tile.number.toString(),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          backgroundColor: Colors.black54,
+                        ),
+                      ),
+                    ),
+                ],
               ),
       ),
     );
@@ -63,10 +89,10 @@ class Exo7State extends State<Exo7> {
   int countMovementMin = 0;
   bool isWon = false;
   int posZeroBack = -1;
-
   int deplacements = 0;
   String image = "Aléatoire";
   bool useMelangeXCoups = false; // Variable pour suivre l'état du switch
+  bool showTileNumbers = false;
   List<String> dropdownMenuItems = [
     "Aléatoire",
     "Image 1",
@@ -277,7 +303,6 @@ class Exo7State extends State<Exo7> {
 
   int aStarSolver() {
     List<int> state = tiles.map((tile) => tile.number).toList();
-    int emptyIndex = state.indexOf(0);
 
     PriorityQueue<List<dynamic>> queue = PriorityQueue(
         (a, b) => (a[1] + heuristic(a[0])).compareTo(b[1] + heuristic(b[0])));
@@ -479,9 +504,13 @@ class Exo7State extends State<Exo7> {
                   padding: EdgeInsets.all(20),
                   itemCount: gridSize * gridSize,
                   itemBuilder: (context, index) {
-                    return TileWidget(tiles[index], onTap: () {
-                      swapTiles(index, getImage(image));
-                    });
+                    return TileWidget(
+                      tiles[index],
+                      onTap: () {
+                        swapTiles(index, getImage(image));
+                      },
+                      showTileNumbers: showTileNumbers,
+                    );
                   },
                 ),
               ),
@@ -557,15 +586,26 @@ class Exo7State extends State<Exo7> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  Text("Afficher les numéros des tuiles",
+                      style: TextStyle(fontSize: 15)),
+                  Switch(
+                    value: showTileNumbers,
+                    onChanged: (value) {
+                      setState(() {
+                        showTileNumbers = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
                     width: 150,
-                    child: Column(
-                      children: [
-                        Text(
-                          "Mode aléatoire",
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
+                    child: Text(
+                      "Mode aléatoire",
+                      style: TextStyle(fontSize: 15),
                     ),
                   ),
                   Switch(
@@ -576,17 +616,13 @@ class Exo7State extends State<Exo7> {
                       });
                     },
                   ),
-                  Container(
+                  SizedBox(
                     width: 150,
-                    child: Column(
-                      children: [
-                        Text(
-                          "Choisir le nombre de mélanges",
-                          style: TextStyle(fontSize: 15),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                      ],
+                    child: Text(
+                      "Choisir le nombre de mélanges",
+                      style: TextStyle(fontSize: 15),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                   ),
                 ],
