@@ -128,7 +128,8 @@ class Exo7State extends State<Exo7> {
   void initState() {
     super.initState();
     generateTiles("Aléatoire");
-    deplacementsController.text = deplacements.toString();
+    deplacementsController.text =
+        deplacements > 0 ? deplacements.toString() : "";
   }
 
   void generateTiles(String image) {
@@ -646,6 +647,10 @@ class Exo7State extends State<Exo7> {
                                 gridSize = gridSize - 1;
                                 generateTiles(image);
                                 countMovement = 0;
+                                deplacements = 0;
+                                deplacementsController.text =
+                                    deplacements.toString();
+                                countMovementMin = 0;
                               }
                             });
                           },
@@ -674,6 +679,10 @@ class Exo7State extends State<Exo7> {
                                 gridSize = gridSize + 1;
                                 generateTiles(image);
                                 countMovement = 0;
+                                countMovementMin = 0;
+                                deplacements = 0;
+                                deplacementsController.text =
+                                    deplacements.toString();
                               }
                             });
                           },
@@ -701,25 +710,23 @@ class Exo7State extends State<Exo7> {
                   maxWidth: 350,
                   maxHeight: 350,
                 ),
-                child: Expanded(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: gridSize,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 5,
-                    ),
-                    padding: EdgeInsets.all(20),
-                    itemCount: gridSize * gridSize,
-                    itemBuilder: (context, index) {
-                      return TileWidget(
-                        tiles[index],
-                        onTap: () {
-                          swapTiles(index, getImage(image));
-                        },
-                        showTileNumbers: showTileNumbers,
-                      );
-                    },
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: gridSize,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
                   ),
+                  padding: EdgeInsets.all(20),
+                  itemCount: gridSize * gridSize,
+                  itemBuilder: (context, index) {
+                    return TileWidget(
+                      tiles[index],
+                      onTap: () {
+                        swapTiles(index, getImage(image));
+                      },
+                      showTileNumbers: showTileNumbers,
+                    );
+                  },
                 ),
               ),
               Row(
@@ -803,12 +810,15 @@ class Exo7State extends State<Exo7> {
                         controller: deplacementsController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                          labelText: "Entrer un nombre",
+                          labelText: "Mélanges",
                           border: OutlineInputBorder(),
                         ),
                         onChanged: (value) {
                           setState(() {
                             deplacements = int.tryParse(value) ?? deplacements;
+                            if (value == "") {
+                              deplacements = 0;
+                            }
                           });
                         },
                       ),
