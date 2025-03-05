@@ -95,6 +95,8 @@ class Exo7State extends State<Exo7> {
   late double step;
   late List<Tile> tiles;
   bool showSmallImage = true;
+  bool hoverButtonMinus = false;
+  bool hoverButtonPlus = false;
   int countMovement = 0;
   int countMovementMin = 0;
   bool isWon = false;
@@ -199,18 +201,17 @@ class Exo7State extends State<Exo7> {
     for (int i = 0; i < deplacements; i++) {
       List<int> adjacentIndices = [];
 
-      // Vérifier les indices adjacents valides
       if (emptyIndex % gridSize != 0) {
-        adjacentIndices.add(emptyIndex - 1); // Gauche
+        adjacentIndices.add(emptyIndex - 1);
       }
       if (emptyIndex % gridSize != gridSize - 1) {
-        adjacentIndices.add(emptyIndex + 1); // Droite
+        adjacentIndices.add(emptyIndex + 1);
       }
       if (emptyIndex >= gridSize) {
-        adjacentIndices.add(emptyIndex - gridSize); // Haut
+        adjacentIndices.add(emptyIndex - gridSize);
       }
       if (emptyIndex < gridSize * (gridSize - 1)) {
-        adjacentIndices.add(emptyIndex + gridSize); // Bas
+        adjacentIndices.add(emptyIndex + gridSize);
       }
 
       int caseAleatoire =
@@ -253,7 +254,8 @@ class Exo7State extends State<Exo7> {
                   child: TextButton(
                 child: Text(
                   "Rejouer",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.blue),
                 ),
                 onPressed: () {
                   setState(() {
@@ -304,6 +306,7 @@ class Exo7State extends State<Exo7> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Switch(
+                          activeColor: Colors.blue,
                           value: useMelangeXCoups,
                           onChanged: (value) {
                             setState(() {
@@ -329,6 +332,7 @@ class Exo7State extends State<Exo7> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Switch(
+                          activeColor: Colors.blue,
                           value: showTileNumbers,
                           onChanged: (value) {
                             setState(() {
@@ -349,6 +353,7 @@ class Exo7State extends State<Exo7> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Switch(
+                          activeColor: Colors.blue,
                           value: useResolver,
                           onChanged: (value) {
                             setState(() {
@@ -368,7 +373,9 @@ class Exo7State extends State<Exo7> {
                               });
                             },
                             child: Text("Fermer",
-                                style: TextStyle(fontWeight: FontWeight.bold))),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue))),
                       ],
                     ),
                   ],
@@ -578,9 +585,8 @@ class Exo7State extends State<Exo7> {
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(width: 5),
                   ElevatedButton(
                     onPressed: () {
                       back();
@@ -591,8 +597,9 @@ class Exo7State extends State<Exo7> {
                       padding: EdgeInsets.all(20),
                       backgroundColor: Colors.blue,
                     ),
-                    child: Icon(Icons.arrow_back, color: Colors.white),
+                    child: Icon(Icons.undo, color: Colors.white),
                   ),
+                  SizedBox(width: 40),
                   Container(
                     padding: EdgeInsets.all(3),
                     decoration: BoxDecoration(
@@ -603,6 +610,9 @@ class Exo7State extends State<Exo7> {
                     child: Row(
                       children: [
                         ElevatedButton(
+                          onHover: (bool value) => setState(() {
+                            hoverButtonMinus = value;
+                          }),
                           onPressed: () {
                             setState(() {
                               if (gridSize > 2) {
@@ -616,15 +626,21 @@ class Exo7State extends State<Exo7> {
                             shape: CircleBorder(),
                             iconSize: 15,
                             padding: EdgeInsets.all(20),
-                            backgroundColor: Colors.blue,
+                            backgroundColor:
+                                hoverButtonMinus ? Colors.white : Colors.blue,
                           ),
                           child: Text('-',
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: hoverButtonMinus
+                                      ? Colors.blue
+                                      : Colors.white,
                                   fontWeight: FontWeight.bold)),
                         ),
                         SizedBox(width: 5),
                         ElevatedButton(
+                          onHover: (bool value) => setState(() {
+                            hoverButtonPlus = value;
+                          }),
                           onPressed: () {
                             setState(() {
                               if (gridSize < 8) {
@@ -638,17 +654,19 @@ class Exo7State extends State<Exo7> {
                             shape: CircleBorder(),
                             iconSize: 15,
                             padding: EdgeInsets.all(20),
-                            backgroundColor: Colors.blue,
+                            backgroundColor:
+                                hoverButtonPlus ? Colors.white : Colors.blue,
                           ),
                           child: Text('+',
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: hoverButtonPlus
+                                      ? Colors.blue
+                                      : Colors.white,
                                   fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(width: 5),
                 ],
               ),
               Container(
