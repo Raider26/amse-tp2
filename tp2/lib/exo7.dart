@@ -149,12 +149,22 @@ class Exo7State extends State<Exo7> {
 
   void swapTiles(int index, String image) {
     int emptyIndex = tiles.indexWhere((tile) => tile.number == 0);
-    List<int> adjacentIndices = [
-      emptyIndex - 1,
-      emptyIndex + 1,
-      emptyIndex - gridSize,
-      emptyIndex + gridSize
-    ];
+    List<int> adjacentIndices = [];
+
+    // Vérifier les indices adjacents valides
+    if (emptyIndex % gridSize != 0) {
+      adjacentIndices.add(emptyIndex - 1); // Gauche
+    }
+    if (emptyIndex % gridSize != gridSize - 1) {
+      adjacentIndices.add(emptyIndex + 1); // Droite
+    }
+    if (emptyIndex >= gridSize) {
+      adjacentIndices.add(emptyIndex - gridSize); // Haut
+    }
+    if (emptyIndex < gridSize * (gridSize - 1)) {
+      adjacentIndices.add(emptyIndex + gridSize); // Bas
+    }
+
     if (adjacentIndices.contains(index) && index >= 0 && index < tiles.length) {
       setState(() {
         posZeroBack = emptyIndex;
@@ -189,20 +199,21 @@ class Exo7State extends State<Exo7> {
     int emptyIndex = tiles.indexWhere((tile) => tile.number == 0);
 
     for (int i = 0; i < deplacements; i++) {
-      List<int> adjacentIndices = [
-        emptyIndex - 1,
-        emptyIndex + 1,
-        emptyIndex - gridSize,
-        emptyIndex + gridSize
-      ];
+      List<int> adjacentIndices = [];
 
-      // Filtrer les indices adjacents valides
-      adjacentIndices = adjacentIndices.where((index) {
-        return index >= 0 &&
-            index < tiles.length &&
-            (index ~/ gridSize == emptyIndex ~/ gridSize ||
-                index % gridSize == emptyIndex % gridSize);
-      }).toList();
+      // Vérifier les indices adjacents valides
+      if (emptyIndex % gridSize != 0) {
+        adjacentIndices.add(emptyIndex - 1); // Gauche
+      }
+      if (emptyIndex % gridSize != gridSize - 1) {
+        adjacentIndices.add(emptyIndex + 1); // Droite
+      }
+      if (emptyIndex >= gridSize) {
+        adjacentIndices.add(emptyIndex - gridSize); // Haut
+      }
+      if (emptyIndex < gridSize * (gridSize - 1)) {
+        adjacentIndices.add(emptyIndex + gridSize); // Bas
+      }
 
       int caseAleatoire =
           adjacentIndices[Random().nextInt(adjacentIndices.length)];
@@ -566,7 +577,7 @@ class Exo7State extends State<Exo7> {
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            if (gridSize > 3) {
+                            if (gridSize > 2) {
                               gridSize = gridSize - 1;
                               generateTiles(image);
                               countMovement = 0;
