@@ -202,16 +202,18 @@ class Exo7State extends State<Exo7> {
     for (int i = 0; i < deplacements; i++) {
       List<int> adjacentIndices = [];
 
-      if (emptyIndex % gridSize != 0) {
+      if ((emptyIndex % gridSize != 0) && (emptyIndex - 1 != posZeroBack)) {
         adjacentIndices.add(emptyIndex - 1);
       }
-      if (emptyIndex % gridSize != gridSize - 1) {
+      if ((emptyIndex % gridSize != gridSize - 1) &&
+          (emptyIndex + 1 != posZeroBack)) {
         adjacentIndices.add(emptyIndex + 1);
       }
-      if (emptyIndex >= gridSize) {
+      if ((emptyIndex >= gridSize) && (emptyIndex - gridSize != posZeroBack)) {
         adjacentIndices.add(emptyIndex - gridSize);
       }
-      if (emptyIndex < gridSize * (gridSize - 1)) {
+      if ((emptyIndex < gridSize * (gridSize - 1)) &&
+          (emptyIndex + gridSize != posZeroBack)) {
         adjacentIndices.add(emptyIndex + gridSize);
       }
 
@@ -226,6 +228,7 @@ class Exo7State extends State<Exo7> {
             factor: 1 / gridSize);
         emptyIndex = caseAleatoire;
       });
+      posZeroBack = emptyIndex;
     }
     posZeroBack = emptyIndex;
   }
