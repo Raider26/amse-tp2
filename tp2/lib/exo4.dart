@@ -10,13 +10,11 @@ class Tile {
     return FittedBox(
       fit: BoxFit.fill,
       child: ClipRect(
-        child: Container(
-          child: Align(
-            alignment: this.alignment,
-            widthFactor: 0.3,
-            heightFactor: 0.3,
-            child: Image.network(this.imageURL),
-          ),
+        child: Align(
+          alignment: alignment,
+          widthFactor: 0.3,
+          heightFactor: 0.3,
+          child: Image.network(imageURL),
         ),
       ),
     );
@@ -24,7 +22,7 @@ class Tile {
 }
 
 Tile tile =
-    new Tile(imageURL: 'https://picsum.photos/512', alignment: Alignment(0, 0));
+    Tile(imageURL: 'https://picsum.photos/512', alignment: Alignment(0, 0));
 
 class Exo4 extends StatelessWidget {
   @override
@@ -41,8 +39,8 @@ class Exo4 extends StatelessWidget {
             height: 150.0,
             child: Container(
                 margin: EdgeInsets.all(20.0),
-                child: this.createTileWidgetFrom(tile))),
-        Container(
+                child: createTileWidgetFrom(tile))),
+        SizedBox(
             height: 200,
             child:
                 Image.network('https://picsum.photos/512', fit: BoxFit.cover))

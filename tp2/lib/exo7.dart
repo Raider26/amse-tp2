@@ -106,6 +106,7 @@ class Exo7State extends State<Exo7> {
   bool useMelangeXCoups = false; // Variable pour suivre l'état du switch
   bool showTileNumbers = false;
   bool useResolver = false;
+  bool isLoading = false;
   String mode = "Mélange aléatoire";
   List<String> dropdownMenuItems = [
     "Aléatoire",
@@ -341,6 +342,27 @@ class Exo7State extends State<Exo7> {
                           },
                         ),
                       ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Indication du nombre minimal de coups pour 3x3 (nécessite un temps de chargment)",
+                            style: TextStyle(
+                                fontSize: 12, fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -706,7 +728,11 @@ class Exo7State extends State<Exo7> {
                     },
                     icon: showSmallImage
                         ? Icon(Icons.remove_red_eye_outlined, size: 20)
-                        : Icon(Icons.remove_red_eye, size: 20),
+                        : Icon(
+                            Icons.remove_red_eye,
+                            size: 20,
+                            color: Colors.blue,
+                          ),
                   ),
                   showSmallImage
                       ? image == "Aléatoire"
