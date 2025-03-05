@@ -24,52 +24,61 @@ class TileWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        color: tile.number == 0 ? Colors.white : Colors.grey,
+        decoration: BoxDecoration(
+          color: tile.number == 0 ? Colors.white : Colors.grey,
+          border:
+              tile.number == 0 ? Border.all(color: Colors.red, width: 2) : null,
+        ),
         child: tile.number == 0
             ? Container(
                 color: Colors.grey,
                 child: Icon(Icons.grid_off, color: Colors.black, size: 70),
               )
-            : Stack(
-                children: [
-                  FittedBox(
-                    fit: BoxFit.fill,
-                    child: ClipRect(
-                      child: Align(
-                        alignment: tile.alignment,
-                        widthFactor: tile.factor,
-                        heightFactor: tile.factor,
-                        child: tile.urlImage.startsWith('assets/')
-                            ? Image.asset(
-                                tile.urlImage,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.network(
-                                tile.urlImage,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.network(
-                                      "https://picsum.photos/300");
-                                },
-                              ),
-                      ),
+            : FittedBox(
+                fit: BoxFit.fill,
+                child: Stack(children: [
+                  ClipRect(
+                    child: Align(
+                      alignment: tile.alignment,
+                      widthFactor: tile.factor,
+                      heightFactor: tile.factor,
+                      child: tile.urlImage.startsWith('assets/')
+                          ? Image.asset(
+                              tile.urlImage,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(
+                              tile.urlImage,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.network(
+                                    "https://picsum.photos/300");
+                              },
+                            ),
                     ),
                   ),
                   if (showTileNumbers)
                     Positioned(
                       top: 5,
                       left: 5,
-                      child: Text(
-                        tile.number.toString(),
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          backgroundColor: Colors.black54,
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        color: Colors.black54,
+                        child: Center(
+                          child: Text(
+                            tile.number.toString(),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              backgroundColor: Colors.black54,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                ],
+                ]),
               ),
       ),
     );
