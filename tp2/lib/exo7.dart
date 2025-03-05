@@ -32,7 +32,6 @@ class TileWidget extends StatelessWidget {
         child: tile.number == 0
             ? Container(
                 color: Colors.grey,
-                child: Icon(Icons.grid_off, color: Colors.black, size: 70),
               )
             : FittedBox(
                 fit: BoxFit.fill,
@@ -272,7 +271,7 @@ class Exo7State extends State<Exo7> {
     }
   }
 
-  void Settings() {
+  void settings() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -381,7 +380,7 @@ class Exo7State extends State<Exo7> {
         );
       },
     ).then((_) {
-      setState(() {}); // Rafraîchir le widget principal après fermeture
+      setState(() {});
     });
   }
 
@@ -445,7 +444,7 @@ class Exo7State extends State<Exo7> {
     PriorityQueue<List<dynamic>> queue = PriorityQueue(
         (a, b) => (a[1] + heuristic(a[0])).compareTo(b[1] + heuristic(b[0])));
 
-    queue.add([state, 0]); // [État actuel, Nombre de coups]
+    queue.add([state, 0]);
 
     Set<String> visited = {};
 
@@ -455,7 +454,7 @@ class Exo7State extends State<Exo7> {
       int moves = current[1];
 
       if (isGoalState(currentState)) {
-        return moves; // Retourne le nombre minimum de coups
+        return moves;
       }
 
       String key = currentState.join(',');
@@ -468,7 +467,7 @@ class Exo7State extends State<Exo7> {
         }
       }
     }
-    return -1; // État impossible (ne devrait pas arriver)
+    return -1;
   }
 
   bool isGoalState(List<int> state) {
@@ -519,42 +518,52 @@ class Exo7State extends State<Exo7> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                alignment: Alignment.centerLeft,
-                width: MediaQuery.of(context).size.width * 0.99,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Nombre de coups:",
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        Text(
-                          countMovement.toString(),
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    gridSize == 3 ? SizedBox(width: 50) : SizedBox.shrink(),
-                    gridSize == 3
-                        ? Column(
-                            children: [
-                              Text(
-                                "Nombre de coups minimum:",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              Text(
-                                countMovementMin.toString(),
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              )
-                            ],
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: 100,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Nombre de coups:",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          Text(
+                            countMovement.toString(),
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           )
-                        : SizedBox.shrink(),
-                  ],
+                        ],
+                      ),
+                      gridSize == 3 ? SizedBox(width: 20) : SizedBox.shrink(),
+                      gridSize == 3
+                          ? Flexible(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "Nombre de coups minimum nécessaires:",
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  Text(
+                                    countMovementMin.toString(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            )
+                          : SizedBox.shrink(),
+                    ],
+                  ),
                 ),
               ),
               Row(
@@ -572,50 +581,57 @@ class Exo7State extends State<Exo7> {
                     ),
                     child: Icon(Icons.arrow_back, color: Colors.white),
                   ),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            if (gridSize > 2) {
-                              gridSize = gridSize - 1;
-                              generateTiles(image);
-                              countMovement = 0;
-                            }
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(),
-                          padding: EdgeInsets.all(20),
-                          backgroundColor: Colors.blue,
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue, width: 2),
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.blueGrey),
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              if (gridSize > 2) {
+                                gridSize = gridSize - 1;
+                                generateTiles(image);
+                                countMovement = 0;
+                              }
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(20),
+                            backgroundColor: Colors.blue,
+                          ),
+                          child: Text('-',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
                         ),
-                        child: Text('-',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                      SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            if (gridSize < 8) {
-                              gridSize = gridSize + 1;
-                              generateTiles(image);
-                              countMovement = 0;
-                            }
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(),
-                          padding: EdgeInsets.all(20),
-                          backgroundColor: Colors.blue,
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              if (gridSize < 8) {
+                                gridSize = gridSize + 1;
+                                generateTiles(image);
+                                countMovement = 0;
+                              }
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(20),
+                            backgroundColor: Colors.blue,
+                          ),
+                          child: Text('+',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
                         ),
-                        child: Text('+',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(width: 5),
                 ],
@@ -714,9 +730,11 @@ class Exo7State extends State<Exo7> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: Settings,
-                  child: Icon(Icons.settings, color: Colors.blue)),
-              SizedBox(height: 20),
+                  onPressed: settings,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: Icon(Icons.settings, color: Colors.white)),
               SizedBox(
                 height: 20,
               ),
@@ -757,8 +775,7 @@ class Exo7State extends State<Exo7> {
 
                             countMovement = 0;
                             if ((gridSize == 3) && (useResolver)) {
-                              countMovementMin =
-                                  aStarSolver(); // Calculer le nombre minimum de coups
+                              countMovementMin = aStarSolver();
                             }
                           }
                         });
@@ -805,8 +822,7 @@ class Exo7State extends State<Exo7> {
                             tiles));
                         countMovement = 0;
                         if (gridSize == 3) {
-                          countMovementMin =
-                              aStarSolver(); // Calculer le nombre minimum de coups
+                          countMovementMin = aStarSolver();
                         }
                       }
                     });
