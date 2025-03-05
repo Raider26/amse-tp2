@@ -106,6 +106,7 @@ class Exo7State extends State<Exo7> {
   bool useMelangeXCoups = false; // Variable pour suivre l'état du switch
   bool showTileNumbers = false;
   bool useResolver = false;
+  String mode = "Mélange aléatoire";
   List<String> dropdownMenuItems = [
     "Aléatoire",
     "Image 1",
@@ -258,6 +259,119 @@ class Exo7State extends State<Exo7> {
         },
       );
     }
+  }
+
+  void Settings() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Center(
+                  child: Text(
+                "Paramètres",
+                style: TextStyle(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              )),
+              actions: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 150,
+                          child: Text(
+                            mode,
+                            style: TextStyle(fontSize: 15),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Switch(
+                          value: useMelangeXCoups,
+                          onChanged: (value) {
+                            setState(() {
+                              useMelangeXCoups = value;
+                              if (value) {
+                                mode = "Mélange X coups";
+                              } else {
+                                mode = "Mélange aléatoire";
+                              }
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Afficher les numéros des tuiles",
+                            style: TextStyle(fontSize: 15)),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Switch(
+                          value: showTileNumbers,
+                          onChanged: (value) {
+                            setState(() {
+                              showTileNumbers = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Utiliser le solveur",
+                            style: TextStyle(fontSize: 15)),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Switch(
+                          value: useResolver,
+                          onChanged: (value) {
+                            setState(() {
+                              useResolver = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              setState(() {
+                                Navigator.of(context).pop();
+                              });
+                            },
+                            child: Text("Fermer",
+                                style: TextStyle(fontWeight: FontWeight.bold))),
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            );
+          },
+        );
+      },
+    ).then((_) {
+      setState(() {}); // Rafraîchir le widget principal après fermeture
+    });
   }
 
   String getImage(String image) {
@@ -433,11 +547,9 @@ class Exo7State extends State<Exo7> {
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment
-                    .spaceBetween, // Sépare les éléments aux extrémités
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(width: 5), // Espacement entre les éléments
-                  // Bouton Back à gauche
+                  SizedBox(width: 5),
                   ElevatedButton(
                     onPressed: () {
                       back();
@@ -449,11 +561,8 @@ class Exo7State extends State<Exo7> {
                     ),
                     child: Icon(Icons.arrow_back, color: Colors.white),
                   ),
-
-                  // Espacement entre les éléments
                   Row(
                     children: [
-                      // Bouton "-"
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
@@ -474,10 +583,7 @@ class Exo7State extends State<Exo7> {
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold)),
                       ),
-
-                      SizedBox(width: 10), // Espacement entre les boutons
-
-                      // Bouton "+"
+                      SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
@@ -500,7 +606,7 @@ class Exo7State extends State<Exo7> {
                       ),
                     ],
                   ),
-                  SizedBox(width: 5), // Espacement entre les éléments
+                  SizedBox(width: 5),
                 ],
               ),
               Container(
@@ -596,59 +702,13 @@ class Exo7State extends State<Exo7> {
                 ],
               ),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Afficher les numéros des tuiles",
-                      style: TextStyle(fontSize: 15)),
-                  Switch(
-                    value: showTileNumbers,
-                    onChanged: (value) {
-                      setState(() {
-                        showTileNumbers = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: Text(
-                      "Mode aléatoire",
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
-                  Switch(
-                    value: useMelangeXCoups,
-                    onChanged: (value) {
-                      setState(() {
-                        useMelangeXCoups = value;
-                      });
-                    },
-                  ),
-                  Switch(
-                    value: useResolver,
-                    onChanged: (value) {
-                      setState(() {
-                        useResolver = value;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    width: 150,
-                    child: Text(
-                      "Choisir le nombre de mélanges",
-                      style: TextStyle(fontSize: 15),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
-                  ),
-                ],
-              ),
+              ElevatedButton(
+                  onPressed: Settings,
+                  child: Icon(Icons.settings, color: Colors.blue)),
               SizedBox(height: 20),
+              SizedBox(
+                height: 20,
+              ),
               if (useMelangeXCoups)
                 Row(
                   children: [
