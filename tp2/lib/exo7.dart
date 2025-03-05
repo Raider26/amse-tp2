@@ -96,6 +96,7 @@ class Exo7State extends State<Exo7> {
   String image = "Aléatoire";
   bool useMelangeXCoups = false; // Variable pour suivre l'état du switch
   bool showTileNumbers = false;
+  bool useResolver = false;
   List<String> dropdownMenuItems = [
     "Aléatoire",
     "Image 1",
