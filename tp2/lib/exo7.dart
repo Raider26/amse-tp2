@@ -26,7 +26,10 @@ class TileWidget extends StatelessWidget {
       child: Container(
         color: tile.number == 0 ? Colors.white : Colors.grey,
         child: tile.number == 0
-            ? Container(color: Colors.grey)
+            ? Container(
+                color: Colors.grey,
+                child: Icon(Icons.grid_off, color: Colors.black, size: 70),
+              )
             : Stack(
                 children: [
                   FittedBox(
