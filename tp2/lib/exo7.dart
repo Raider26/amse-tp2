@@ -447,7 +447,7 @@ class Exo7State extends State<Exo7> {
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            if (gridSize > 2) {
+                            if (gridSize > 3) {
                               gridSize = gridSize - 1;
                               generateTiles(image);
                               countMovement = 0;
@@ -619,6 +619,14 @@ class Exo7State extends State<Exo7> {
                       });
                     },
                   ),
+                  Switch(
+                    value: useResolver,
+                    onChanged: (value) {
+                      setState(() {
+                        useResolver = value;
+                      });
+                    },
+                  ),
                   SizedBox(
                     width: 150,
                     child: Text(
@@ -665,8 +673,9 @@ class Exo7State extends State<Exo7> {
                             } while (!isResolvable(
                                 tiles.indexWhere((tile) => tile.number == 0),
                                 tiles));
+
                             countMovement = 0;
-                            if (gridSize == 3) {
+                            if ((gridSize == 3) && (useResolver)) {
                               countMovementMin =
                                   aStarSolver(); // Calculer le nombre minimum de coups
                             }
