@@ -103,7 +103,7 @@ class Exo7State extends State<Exo7> {
   int posZeroBack = -1;
   int deplacements = 0;
   String image = "Aléatoire";
-  bool useMelangeXCoups = false; // Variable pour suivre l'état du switch
+  bool useMelangeXCoups = false;
   bool showTileNumbers = false;
   bool useResolver = false;
   bool isLoading = false;
@@ -253,7 +253,27 @@ class Exo7State extends State<Exo7> {
               "Félicitations!",
               style: TextStyle(fontWeight: FontWeight.bold),
             )),
-            content: Text("Vous avez gagné en $countMovement mouvements."),
+            content: SizedBox(
+              height: useMelangeXCoups
+                  ? 90
+                  : useResolver
+                      ? 90
+                      : 20,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Vous avez gagné en $countMovement mouvements."),
+                  if (useMelangeXCoups) SizedBox(height: 10),
+                  if (useMelangeXCoups)
+                    Text("Le nombre de mélange était de $deplacements."),
+                  if (useResolver && gridSize == 3) SizedBox(height: 10),
+                  if (useResolver && gridSize == 3)
+                    Text(
+                        "Le nombre de coups minimum était de $countMovementMin.",
+                        textAlign: TextAlign.center),
+                ],
+              ),
+            ),
             actions: [
               Center(
                   child: TextButton(
