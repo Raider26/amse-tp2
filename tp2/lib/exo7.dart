@@ -226,9 +226,9 @@ class Exo7State extends State<Exo7> {
             urlImage: getImage(image),
             alignment: Alignment(-1, -1),
             factor: 1 / gridSize);
+        posZeroBack = emptyIndex;
         emptyIndex = caseAleatoire;
       });
-      posZeroBack = emptyIndex;
     }
     posZeroBack = emptyIndex;
   }
