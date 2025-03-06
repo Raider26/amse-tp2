@@ -153,18 +153,17 @@ class Exo7State extends State<Exo7> {
     int emptyIndex = tiles.indexWhere((tile) => tile.number == 0);
     List<int> adjacentIndices = [];
 
-    // Vérifier les indices adjacents valides
     if (emptyIndex % gridSize != 0) {
-      adjacentIndices.add(emptyIndex - 1); // Gauche
+      adjacentIndices.add(emptyIndex - 1);
     }
     if (emptyIndex % gridSize != gridSize - 1) {
-      adjacentIndices.add(emptyIndex + 1); // Droite
+      adjacentIndices.add(emptyIndex + 1);
     }
     if (emptyIndex >= gridSize) {
-      adjacentIndices.add(emptyIndex - gridSize); // Haut
+      adjacentIndices.add(emptyIndex - gridSize);
     }
     if (emptyIndex < gridSize * (gridSize - 1)) {
-      adjacentIndices.add(emptyIndex + gridSize); // Bas
+      adjacentIndices.add(emptyIndex + gridSize);
     }
 
     if (adjacentIndices.contains(index) && index >= 0 && index < tiles.length) {
@@ -401,11 +400,13 @@ class Exo7State extends State<Exo7> {
                         Switch(
                           activeColor: Colors.blue,
                           value: useResolver,
-                          onChanged: (value) {
-                            setState(() {
-                              useResolver = value;
-                            });
-                          },
+                          onChanged: (gridSize == 3)
+                              ? null
+                              : (value) {
+                                  setState(() {
+                                    useResolver = value;
+                                  });
+                                },
                         ),
                       ],
                     ),
@@ -850,6 +851,7 @@ class Exo7State extends State<Exo7> {
                           backgroundColor: Colors.blue),
                       onPressed: () {
                         setState(() {
+                          countMovement = 0;
                           melangeXCoups(deplacements);
                         });
                       },
