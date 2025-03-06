@@ -400,13 +400,11 @@ class Exo7State extends State<Exo7> {
                         Switch(
                           activeColor: Colors.blue,
                           value: useResolver,
-                          onChanged: (gridSize == 3)
-                              ? null
-                              : (value) {
-                                  setState(() {
-                                    useResolver = value;
-                                  });
-                                },
+                          onChanged: (value) {
+                            setState(() {
+                              useResolver = value;
+                            });
+                          },
                         ),
                       ],
                     ),
